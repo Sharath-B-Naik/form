@@ -29,16 +29,25 @@ jobs:
       - run: flutter pub get
       - run: flutter config --enable-web
       - run: flutter build web
-      - uses: actions/checkout@v3
-      - uses: FirebaseExtended/action-hosting-deploy@v0
+
+  build_and_deploy:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v3
+        - uses: FirebaseExtended/action-hosting-deploy@v0
           with:
             repoToken: '${{ secrets.TOKEN }}'
             firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NOTE_APP_1BE09 }}'
             channelId: live
-            projectId: note-app-1be09
+            projectId: note-app-1be09   
+
+  build_and_preview:
+    if: '${{ github.event.pull_request.head.repo.full_name == github.repository }}'
+    runs-on: ubuntu-latest
+    steps:
       - uses: actions/checkout@v3
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_NOTE_APP_1BE09 }}'
-          projectId: note-app-1be09
+          projectId: note-app-1be09  
