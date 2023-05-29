@@ -1,0 +1,25 @@
+[
+    {
+        "title": "What is your name",
+        "type": "input",
+        "options": []
+    },
+    {
+        "title": "How are you doing",
+        "type": "radio",
+        "options": [
+            "Feeling good",
+            "Feeling bad",
+            "Feeling OK"
+        ]
+    },
+    {
+        "title": "What do you like",
+        "type": "checkbox",
+        "options": [
+            "iphone",
+            "android",
+            "Google"
+        ]
+    }
+]
