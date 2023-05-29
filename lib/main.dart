@@ -2,16 +2,17 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:form_project/repo_model.dart';
 
 import 'calender.dart';
 
-void main() {
+void main() async {
   runApp(
     DevicePreview(
-      enabled: false,
+      enabled: kReleaseMode && kIsWeb,
       builder: (context) => const MyApp(),
     ),
   );

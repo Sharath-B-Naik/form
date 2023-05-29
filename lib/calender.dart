@@ -38,7 +38,7 @@ class _CalenderPageState extends State<CalenderPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFF3F1554),
         title: Text(
-          "  tce",
+          const String.fromEnvironment("APPNAME"),
           style: const TextStyle(fontSize: 32),
           textScaleFactor: SizeConfig.textScaleFactor(context),
         ),
