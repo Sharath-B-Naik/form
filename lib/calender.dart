@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:form_project/calender_event_listview.dart';
 import 'package:form_project/extension.dart';
+import 'package:form_project/size_config.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class CalenderPage extends StatefulWidget {
@@ -31,12 +32,15 @@ class _CalenderPageState extends State<CalenderPage> {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color(0xFF3F1554),
-        title: const Text(
+        title: Text(
           "  tce",
-          style: TextStyle(fontSize: 32),
+          style: const TextStyle(fontSize: 32),
+          textScaleFactor: SizeConfig.textScaleFactor(context),
         ),
       ),
       body: SingleChildScrollView(
@@ -75,9 +79,9 @@ class _CalenderPageState extends State<CalenderPage> {
                   shape: BoxShape.circle,
                 ),
               ),
-              eventLoader: (day) {
-                return [];
-              },
+              // eventLoader: (day) {
+              //   return [];
+              // },
               daysOfWeekHeight: 40,
               headerStyle: const HeaderStyle(
                 titleCentered: true,
@@ -86,9 +90,8 @@ class _CalenderPageState extends State<CalenderPage> {
             ),
             IconButton(
               onPressed: () {
-                setState(() {
-                  isExpanded = !isExpanded;
-                });
+                isExpanded = !isExpanded;
+                setState(() {});
               },
               splashRadius: 20,
               icon: Icon(
@@ -112,9 +115,12 @@ class _CalenderPageState extends State<CalenderPage> {
                 return Row(
                   children: [
                     SizedBox(
-                      width: 100,
+                      width: size.width * 0.3,
                       child: Center(
-                        child: Text("$weekname $date"),
+                        child: Text(
+                          "$weekname $date",
+                          textScaleFactor: SizeConfig.textScaleFactor(context),
+                        ),
                       ),
                     ),
                     Expanded(
@@ -156,13 +162,19 @@ class _CalenderPageState extends State<CalenderPage> {
                                               index.isEven
                                                   ? "InUnity Innovation - Hackathon Man"
                                                   : "eWaste Hackathon",
+                                              textScaleFactor:
+                                                  SizeConfig.textScaleFactor(
+                                                      context),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.w500,
                                               ),
                                             ),
-                                            const Text(
+                                            Text(
                                               "10am - 12pm",
-                                              style: TextStyle(
+                                              textScaleFactor:
+                                                  SizeConfig.textScaleFactor(
+                                                      context),
+                                              style: const TextStyle(
                                                 fontSize: 12,
                                                 fontWeight: FontWeight.w400,
                                               ),
