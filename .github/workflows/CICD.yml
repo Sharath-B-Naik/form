@@ -21,7 +21,7 @@ jobs:
       - run: flutter clean
       - run: flutter config --enable-web
       - run: flutter pub get
-      - run: flutter build web
+      - run: flutter build web --base-href=/form/demo/gh-pages/
       - run: |
           cd build/web
           git init
