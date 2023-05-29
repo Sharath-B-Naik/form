@@ -18,18 +18,7 @@ jobs:
       - run: flutter clean
       - run: flutter pub get
       - run: flutter config --enable-web
-      - run: flutter build web
-      - run: |
-          cd build/web
-          git init
-          git config --global user.email sharathnaik89@gmail.com
-          git config --global user.name sharath-b-naik
-          git status
-          git remote add origin https://${{secrets.TOKEN}}@github.com/Sharath-B-Naik/form.git
-          git checkout -b dev
-          git add .
-          git commit -m "update"
-          git push origin dev -f
+      - run: flutter build web --dart-define=APPNAME='${{ secrets.APPNAME }}'
 
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
