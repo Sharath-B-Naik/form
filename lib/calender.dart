@@ -22,11 +22,12 @@ class _CalenderPageState extends State<CalenderPage> {
   }
 
   List<DateTime> get getWeekDates {
-    final start = selectedDay.subtract(Duration(days: selectedDay.weekday));
+    int weekday = selectedDay.weekday == 7 ? 0 : selectedDay.weekday;
+    DateTime start = selectedDay.subtract(Duration(days: weekday));
+
     final result = List.generate(7, (i) {
-      return start.add(Duration(days: start.weekday + i));
+      return start.add(Duration(days: start.weekday + (i - 7)));
     });
-    result.insert(0, result.removeLast());
     return result;
   }
 
