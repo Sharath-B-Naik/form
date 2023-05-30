@@ -14,24 +14,25 @@ class CalenderPage extends StatefulWidget {
 
 class _CalenderPageState extends State<CalenderPage> {
   DateTime selectedDay = DateTime.now();
-  bool isExpanded = false;
-  List<DateTime> selectedDayWeekRow = [];
+  bool isExpanded = true;
 
   @override
   void initState() {
     super.initState();
-    selectedDayWeekRow = getWeekDates;
   }
 
   List<DateTime> get getWeekDates {
     final start = selectedDay.subtract(Duration(days: selectedDay.weekday));
-    return List.generate(7, (i) {
+    final result = List.generate(7, (i) {
       return start.add(Duration(days: start.weekday + i));
     });
+    result.insert(0, result.removeLast());
+    return result;
   }
 
   @override
   Widget build(BuildContext context) {
+    getWeekDates;
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -49,7 +50,6 @@ class _CalenderPageState extends State<CalenderPage> {
             TableCalendar(
               onDaySelected: (day, focus) {
                 selectedDay = day;
-                selectedDayWeekRow = getWeekDates;
                 setState(() {});
               },
               availableGestures: AvailableGestures.horizontalSwipe,
@@ -61,7 +61,7 @@ class _CalenderPageState extends State<CalenderPage> {
                 return formated == selected ? true : false;
               },
               calendarFormat:
-                  isExpanded ? CalendarFormat.week : CalendarFormat.month,
+                  isExpanded ? CalendarFormat.month : CalendarFormat.week,
               firstDay: DateTime.utc(2010, 10, 16),
               lastDay: DateTime.utc(2030, 3, 14),
               calendarStyle: CalendarStyle(
@@ -82,10 +82,61 @@ class _CalenderPageState extends State<CalenderPage> {
               // eventLoader: (day) {
               //   return [];
               // },
-              daysOfWeekHeight: 40,
+              daysOfWeekHeight: isExpanded ? 40 : 0,
               headerStyle: const HeaderStyle(
                 titleCentered: true,
                 formatButtonVisible: false,
+              ),
+              calendarBuilders: CalendarBuilders(
+                dowBuilder: (a, b) => isExpanded ? null : const SizedBox(),
+                defaultBuilder: (_, day, focusedDay) {
+                  if (isExpanded) return null;
+
+                  final selected = "$selectedDay".toDateFormat("yyyy-MM-dd");
+                  final focused = "$day".toDateFormat("yyyy-MM-dd");
+
+                  return UnExpandedDayWidget(
+                    day: day,
+                    isSelected: focused == selected,
+                    isExpanded: isExpanded,
+                  );
+                },
+                disabledBuilder: (context, day, focusedDay) {
+                  if (isExpanded) return null;
+
+                  final selected = "$selectedDay".toDateFormat("yyyy-MM-dd");
+                  final focused = "$day".toDateFormat("yyyy-MM-dd");
+
+                  return UnExpandedDayWidget(
+                    day: day,
+                    isSelected: focused == selected,
+                    isExpanded: isExpanded,
+                  );
+                },
+                selectedBuilder: (context, day, focusedDay) {
+                  if (isExpanded) return null;
+
+                  final selected = "$selectedDay".toDateFormat("yyyy-MM-dd");
+                  final focused = "$day".toDateFormat("yyyy-MM-dd");
+
+                  return UnExpandedDayWidget(
+                    day: day,
+                    isSelected: focused == selected,
+                    isExpanded: isExpanded,
+                  );
+                },
+                todayBuilder: (context, day, focusedDay) {
+                  if (isExpanded) return null;
+
+                  final selected = "$selectedDay".toDateFormat("yyyy-MM-dd");
+                  final focused = "$day".toDateFormat("yyyy-MM-dd");
+
+                  return UnExpandedDayWidget(
+                    day: day,
+                    isSelected: focused == selected,
+                    isExpanded: isExpanded,
+                  );
+                },
               ),
             ),
             IconButton(
@@ -96,8 +147,8 @@ class _CalenderPageState extends State<CalenderPage> {
               splashRadius: 20,
               icon: Icon(
                 isExpanded
-                    ? CupertinoIcons.chevron_down
-                    : CupertinoIcons.chevron_up,
+                    ? CupertinoIcons.chevron_up
+                    : CupertinoIcons.chevron_down,
               ),
             ),
             ListView.separated(
@@ -109,7 +160,7 @@ class _CalenderPageState extends State<CalenderPage> {
                 height: 0,
               ),
               itemBuilder: (context, index) {
-                final day = selectedDayWeekRow[index];
+                final day = getWeekDates[index];
                 final weekname = "$day".toDateFormat("EE");
                 final date = day.day;
                 return Row(
@@ -197,6 +248,53 @@ class _CalenderPageState extends State<CalenderPage> {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class UnExpandedDayWidget extends StatelessWidget {
+  final DateTime day;
+  final bool isSelected;
+  final bool isExpanded;
+  const UnExpandedDayWidget({
+    super.key,
+    required this.day,
+    required this.isSelected,
+    required this.isExpanded,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    print(isSelected);
+    return Container(
+      width: 40,
+      height: 100,
+      padding: const EdgeInsets.all(2),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(18),
+          top: Radius.circular(18),
+        ),
+        border: Border.all(
+          color: !isExpanded && isSelected
+              ? const Color(0xFFEC684A)
+              : Colors.transparent,
+          width: 2,
+        ),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "$day".toDateFormat("EEE"),
+            style: const TextStyle(fontWeight: FontWeight.w400),
+          ),
+          Text(
+            day.day.toString(),
+            style: const TextStyle(fontWeight: FontWeight.w400),
+          ),
+        ],
       ),
     );
   }
